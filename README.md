@@ -1,4 +1,6 @@
-# Detect genomic selection outlier loci using pcadapt [Luu et al 2016]( https://doi.org/10.1111/1755-0998.12592)
+# Detect genomic selection outlier loci using pcadapt 
+
+For more information about the pcadapt R package [Luu et al 2016]( https://doi.org/10.1111/1755-0998.12592)
 
 The script 00_snpsCall_haplotypeCaller.sh produces sorting of mapped files and duplicates removal, splits reads with Ns in the CIGAR string and trims overhangs. Subsequently, HaplotypeCaller of gatk v.4 (Van der Auwera and O'Connor 2020) is used to call variants.
 
