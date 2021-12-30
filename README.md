@@ -8,7 +8,7 @@ The script 01_snpsCall_genomicDB.slrm merges multiple samples in gvcf format usi
 
 The script 02_snpsCall_genotypeGVCF.slrm performs joint genotyping and processing of the resulting vcf file.
 
-Filtering of SNPs was performed using vcftools v.0.1.16 (Danecek et al. 2011) with the following options:
+Filtering of SNPs was performed using vcftools v.0.1.16 [Danecek et al. 2011](10.1093/bioinformatics/btr330) with the following options:
 ```
 vcftools \
 --vcf input.vcf \
