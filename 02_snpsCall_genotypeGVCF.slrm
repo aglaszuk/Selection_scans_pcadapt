@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+#SBATCH --nice=300
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=8GB
+#SBATCH --job-name=genotypeGVCF_RNAseq
+#SBATCH --mail-type=ALL
+
+# Requires java8 !
+
+module unload java
+module load java/1.8u152
+module load gatk/
+module load bcftools/
+module load vcflib/
+eval "$(conda shell.bash hook)"
+conda activate vcflib
+
+# Go to working directory and make a vcf file for each database directory
+
+cd /path/to/working/dir
+mkdir vcf
+
+gatk --java-options "-Xmx8g" GenotypeGVCFs \
+   -R /path/to/genome.fasta  \
+   -V gendb://my_database${SLURM_ARRAY_TASK_ID} \
+   -O vcf/jointVar_${SLURM_ARRAY_TASK_ID}.vcf.gz \
+   --tmp-dir=/path/to/tmpDir
+
+cd vcf/
+
+# Change namings of vcf files from 0 to 9 and their correspondent .tbi files to keep right order
+for file in CG_trans_joint_[0-9].vcf.gz*; \
+do mv $file ${file/jointVar_/jointVar_0}; \
+done
+
+# Concatenate vcf files
+bcftools concat $(for file in *.vcf.gz; do echo "$file "; done) > jointVar.vcf
+
+# Split indels into SNPs
+vcfallelicprimitives \
+jointVar.vcf \
+--keep-info \
+--keep-geno \
+> jointVar_MNPsToSNPs.vcf
